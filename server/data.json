@@ -1,0 +1,28 @@
+{
+    "users": [
+        {
+            "username": "hello",
+            "birthdate": "hello",
+            "age": 18,
+            "email": "example@example.com.au",
+            "password": "hello",
+            "valid": true
+        },
+        {
+            "username": "hello",
+            "birthdate": "hello",
+            "age": 18,
+            "email": "example@example.com.au",
+            "password": "hello",
+            "valid": true
+        },
+        {
+            "username": "hello",
+            "birthdate": "hello",
+            "age": 18,
+            "email": "example@example.com.au",
+            "password": "hello",
+            "valid": true
+        }
+    ]
+}
