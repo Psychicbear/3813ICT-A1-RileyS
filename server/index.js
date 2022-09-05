@@ -21,20 +21,16 @@ app.get ('/', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-    console.log("Recieved request")
-    console.log(req.body)
     if(!req.body){
         return res.sendStatus(400);
     }
     var user = jsonData.users.find((user) => {
-        console.log(user)
-        console.log(req.body)
         if(user.username == req.body.username && user.password == req.body.password){
+            console.log({ userIsAdmin: checkAdmin(user.id)})
             return true;
         }
     })
 
-    console.log(user);
     if(!user){
         user = req.body;
     }
@@ -42,4 +38,25 @@ app.post('/api/login', (req, res) => {
 
 });
 
+app.post('/api/groups', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let data = { groups: [] }
+    if(checkAdmin(req.body.userID)){
+        data.groups = jsonData.groups
+    } else {
+        data.groups = jsonData.groups.filter((group) => {
+            if(group.participants.includes(res.body.userID)){
+                return true
+            }
+        })
+    }
+    res.send(data)
+
+})
+
+function checkAdmin(userID){
+    return jsonData.global.admincache.includes(userID)
+}
 //Check permission function which gets the user ID and the permission level required, and checks if user meets this permission level

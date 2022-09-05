@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ export class LoginComponent implements OnInit {
   usrname: String = '';
   usrpwd: String = '';
   creds = [];
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private dataService: DataService) {
 
    }
 
@@ -19,8 +20,17 @@ export class LoginComponent implements OnInit {
   }
 
   submit(){
-    this.http.post<any>('http://127.0.0.1:3000/api/login', { username: this.usrname, password: this.usrpwd}).subscribe(data => {
+    this.dataService.validateLogin(this.usrname, this.usrpwd).subscribe(data => {
       console.log(data)
+      if(data.valid){
+        this.dataService.saveUser(data)
+        let userID = this.dataService.dataUser.id
+        console.log(userID)
+        this.dataService.fetchGroups(userID)
+        //Log user in
+      } else {
+        //Error Correction
+      }
     })
   }
 
