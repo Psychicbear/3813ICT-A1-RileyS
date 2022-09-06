@@ -37,6 +37,9 @@ export class DataService {
 
   constructor(private http: HttpClient, private router: Router) { 
     this.init()
+    this.fetchChannels(0,2).subscribe((data) => {
+      console.log(data)
+    })
   }
 
   init(){
@@ -80,8 +83,9 @@ export class DataService {
     //Get groups that are relevant to user
   }
 
-  fetchChannels(){
+  fetchChannels(groupID: number, userID: number){
     //Get channels that are relevant to user
+    return this.http.post<any>(this.serverLocation + '/api/channels', {groupID: groupID, userID: userID})
   }
 
   fetchChannelContent(){

@@ -5,6 +5,7 @@ var app = express();
 let host = '127.0.0.1';
 let port = 3000;
 var cors = require('cors');
+const { group } = require('console');
 app.use(cors())
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -53,9 +54,36 @@ app.post('/api/groups', (req, res) => {
         })
     }
     res.send(data)
-
 })
 
+app.post('/api/channels', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let data = {}
+    //Finds relevant group
+    let groupIndex = jsonData.groups.findIndex((i) => {
+        return req.body.groupID == i.id
+    })
+    console.log({groupIndex: groupIndex})
+    //Gets the channels associated with this group
+    let groupChannels = jsonData.groups[groupIndex].channels.map((channelID) =>{
+        return jsonData.channels.find((channel) => {
+            return channel.id == channelID
+        })
+    })
+    console.log({groupChannels: groupChannels})
+    //If request is from admin, return all the associated channels
+    if(checkAdmin(req.body.userID)){
+        data.channels = groupChannels;
+    } else { //Otherwise check which channels this user can view
+        data.channels = groupChannels.filter((channel) => {
+            channel.participants.includes(req.body.userID)
+        })
+    }
+    console.log(data.channels)
+    res.send(data)
+})
 function checkAdmin(userID){
     return jsonData.global.admincache.includes(userID)
 }
