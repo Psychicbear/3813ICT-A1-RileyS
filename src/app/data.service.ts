@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { BehaviorSubject, pipe } from 'rxjs';
 
 interface User {
@@ -30,13 +31,43 @@ export class DataService {
     admin: false,
     super: false
   }
+  groups: any[] = []
+  valid: boolean = false
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { 
+    this.init()
+  }
 
+  init(){
+    let initData = this.getUser()
+    if(initData != null && initData.valid){
+      this.dataUser = initData
+      this.valid = true
+    } else {
+      this.router.navigate(['login'])
+    }
+  }
+
+  forceLogin(){
+    if(!this.valid){
+      this.router.navigate(['login'])
+    }
+  }
+  
   validateLogin(username: String, password: String){
     //Check if login is valid and allow user in if true
     return this.http.post<User>(this.serverLocation + '/api/login', {username: username, password: password, valid: false})
+  }
+
+  getUser(){
+      let dataCheck = localStorage.getItem('user')
+      if(dataCheck != null){
+        return JSON.parse(dataCheck)
+      } else {
+        console.log('Error fetching data')
+        return null
+      }
   }
 
   saveUser(userData: User){
@@ -45,9 +76,7 @@ export class DataService {
   }
   
   fetchGroups(userID: number){
-    this.http.post<any>(this.serverLocation + '/api/groups', {userID: userID}).subscribe((groups) => {
-      console.log(groups)
-    })
+    return this.http.post<any>(this.serverLocation + '/api/groups', {userID: userID})
     //Get groups that are relevant to user
   }
 

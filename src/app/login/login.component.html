@@ -3,14 +3,12 @@
     <div class="form-outline mb-4">
       <input type="email" id="form2Example1" class="form-control" name="usrname" [(ngModel)]="usrname"/>
       <label class="form-label" for="form2Example1">Email address</label>
-      <p>{{showLength(usrname)}}</p>
     </div>
   
     <!-- Password input -->
     <div class="form-outline mb-4">
       <input type="password" id="form2Example2" class="form-control" name="usrpwd" [(ngModel)]="usrpwd"/>
       <label class="form-label" for="form2Example2">Password</label>
-      <p>{{showLength(usrpwd)}}</p>
     </div>
   
     <!-- 2 column grid layout for inline styling -->
@@ -27,6 +25,10 @@
         <!-- Simple link -->
         <a href="#!">Forgot password?</a>
       </div>
+    </div>
+
+    <div class="alert alert-danger" role="alert" *ngIf="error">
+      Error: Your username or password is incorrect
     </div>
   
     <!-- Submit button -->
