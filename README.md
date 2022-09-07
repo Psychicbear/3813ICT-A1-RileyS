@@ -163,6 +163,31 @@ All API calls are to be sent to the route at `./api/` to specify their purpose a
 |**Return Value**|`{ success: boolean, error: string }`|
 |**Technical Explanation**|The route constucts a message object with the userID, content and a datetime. It then saves the message to the beginning of the messages of the respective channel log|
 
+# Angular Architecture
+## Components
+### Data.service
+This service is the heart of the application as it follows a server authoritative design philosophy, meaning all commands must be verified by the server to ensure permission levels are respected. The main function of this service is to send requests to the server and receive responses based off of the user's permission level. The goal of the service is to provide each component with the data they require.
+### Login
+For first time users of the app, this is the component you will encounter first at `./login`. The main feature of this component is the login form which contains an input for an `email` and a `password`. On submission, the Data.service sends the login information to the server for authentication. If the user is authenticated, the user will be redirected to the hub component at `./home`. If user data is already found and loaded from localStorage, this page will redirect to `./home` automatically.
+
+### Hub
+This component (located at `./home`) aims to be the hub for users to access all of the groups they participate in. Using the data.service, the hub lists all of the groups available to the user as clickable links. Upon clicking one of these groups, the user is re-routed to the group component at `./group` with the associated groupID.
+
+When the user is verified as a super user or admin, additional fields are available for the user, enabling the creation, deletion and update of groups within the application.
+
+
+### Group
+This component (located at `./group`) much like the hub component primarily displays a list of channels for the user to access. Using the router, this component takes the groupID from the provided route and uses it to load the available channels for the user. Clicking on a channel routes the user to the channel component with it's channel id to `./channel`. Future iterations of group will include message previews for each available channel, showing the user the most recent message sent in each channel.
+
+When the user is verified as a super user, admin, or group assis of the selected group,  additional fields are available for the user, enabling the creation, deletion and update of channels within the group.
+
+
+### Channel
+This component (located at `./channel`) is where all conversations take place. Using the `channelID` passed through the route, this component populates the window with a channel's message history, displaying each message with the user whom sent the message, their profile picture and the time at which the message was sent. The included chatbox will allow the user to send their own messages to the channel. In future iterations, the channel component will utilise websockets to enable live updates of the channel messages
+
+### Account
+This component (located at `./account`) enables the user to make changes to their own account, allowing them to change their username, email or password. This section also allows the user to set a profile picture to help users better identify them in conversations.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
 
 ## Development server
