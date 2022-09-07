@@ -30,9 +30,6 @@ export class DataService {
 
   constructor(private http: HttpClient, private router: Router) { 
     this.init()
-    this.fetchChannels(0,2).subscribe((data) => {
-      console.log(data)
-    })
   }
 
   init(){
@@ -88,7 +85,7 @@ export class DataService {
     })
   }
 
-  fetchChannels(groupID: number, userID: number){
+  fetchChannels(userID: number, groupID: number){
     //Get channels that are relevant to user
     return this.http.post<any>(this.serverLocation + '/api/channels', {groupID: groupID, userID: userID})
   }
@@ -104,6 +101,19 @@ export class DataService {
   deleteGroup(userID: number, groupID: number){
     return this.http.post<any>(this.serverLocation + '/api/groups/delete', {userID: userID, groupID: groupID})
   }
+
+  newChannel(userID: number, groupID: number, name: string){
+    return this.http.post<any>(this.serverLocation + '/api/channels/add', {userID: userID, groupID: groupID, name: name})
+  }
+
+  editChannel(userID: number, groupID: number, channel: {}){
+    return this.http.post<any>(this.serverLocation + '/api/channels/edit', {userID: userID, groupID: groupID, channel: channel})
+  }
+
+  deleteChannel(userID: number, groupID: number, channelID: number){
+    return this.http.post<any>(this.serverLocation + '/api/channels/delete', {userID: userID, groupID: groupID, channelID: channelID})
+  }
+
   fetchChannelContent(){
     //Get data within selected channel
   }  

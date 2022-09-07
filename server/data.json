@@ -36,29 +36,46 @@
     ],
     "groups": [
         {
-            "id": 0,
-            "name": "IT Study",
-            "channels": [
-                0,
-                1
-            ],
-            "participants": [
-                0,
-                1,
-                2
-            ],
-            "assis": [
-                2
-            ]
-        },
-        {
             "id": 1,
             "name": "Science Study",
-            "channels": [],
-            "participants": [
-                0,
-                1
+            "channels": [
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                16,
+                16,
+                16,
+                17
             ],
+            "participants": [],
             "assis": []
         },
         {
@@ -84,26 +101,18 @@
                 1
             ],
             "assis": []
+        },
+        {
+            "id": 14,
+            "name": "test",
+            "channels": [
+                16
+            ],
+            "participants": [],
+            "assis": []
         }
     ],
     "channels": [
-        {
-            "id": 0,
-            "name": "Programming",
-            "participants": [
-                0,
-                1,
-                2
-            ]
-        },
-        {
-            "id": 1,
-            "name": "Networking",
-            "participants": [
-                0,
-                1
-            ]
-        },
         {
             "id": 2,
             "name": "Physics",
@@ -141,6 +150,161 @@
                     1
                 ]
             ]
+        },
+        {
+            "id": 16,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 16,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 17,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 18,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 19,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 20,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 21,
+            "name": "RenamedChannel",
+            "participants": []
+        },
+        {
+            "id": 22,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 23,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 24,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 25,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 26,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 27,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 28,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 29,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 30,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 31,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 32,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 33,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 34,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 35,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 36,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 37,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 38,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 39,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 40,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 41,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 47,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 16,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 16,
+            "name": "General",
+            "participants": []
+        },
+        {
+            "id": 17,
+            "name": "General",
+            "participants": []
         }
     ]
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { skip, Subscribable, Subscriber } from 'rxjs';
+import { skip, filter, map } from 'rxjs';
 import { DataService } from '../data.service';
+import { Router, ActivatedRoute, NavigationEnd, RouterEvent } from '@angular/router';
 
 @Component({
   selector: 'app-hub',
@@ -9,16 +10,21 @@ import { DataService } from '../data.service';
 })
 export class HubComponent implements OnInit {
   groups = [{id: -1, name: '', participants: []}]
-  constructor(private dataService: DataService) { 
+  constructor(private dataService: DataService, private router: Router, private activatedRoute: ActivatedRoute) { 
+    this.dataService.forceLogin()
   }
 
   ngOnInit(): void {
-    this.dataService.forceLogin()
-    this.dataService.groups.pipe(skip(1)).subscribe((res) => {
+    this.dataService.reloadGroups(this.dataService.id)
+    this.dataService.groups.subscribe((res) => {
       this.groups = res
     })
 
+  }
 
+  openGroup(groupID: number){
+    console.log(groupID)
+    this.router.navigateByUrl('/group', {state: {id: groupID}})
   }
 
   addGroup(name: string){
@@ -27,10 +33,6 @@ export class HubComponent implements OnInit {
       console.log({result: res})
       if(res.reload){
         this.dataService.reloadGroups(this.dataService.id)
-        // this.dataService.fetchGroups(this.dataService.dataUser.id).subscribe((groups)=>{
-        //   console.log(groups)
-        //   this.dataService.groups.next(groups)
-        // })
       }
     })
   }
