@@ -31,7 +31,7 @@ export class HubComponent implements OnInit {
     console.log('Attempting to add group')
     this.dataService.newGroup(this.dataService.id, name).subscribe((res)=> {
       console.log({result: res})
-      if(res.reload){
+      if(res.success){
         this.dataService.reloadGroups(this.dataService.id)
       }
     })
@@ -43,7 +43,7 @@ export class HubComponent implements OnInit {
     console.log('Attempting to remove group')
     this.dataService.deleteGroup(this.dataService.id, this.groups[index].id).subscribe(res => {
       console.log({result: res})
-      if(res.reload){
+      if(res.success){
         this.dataService.reloadGroups(this.dataService.id)
       }
     })
@@ -55,7 +55,7 @@ export class HubComponent implements OnInit {
     this.groups[index].name = name;
     this.dataService.editGroup(this.dataService.id, this.groups[index]).subscribe(res => {
       console.log({results: res})
-      if(res.reload){
+      if(res.success){
         this.dataService.reloadGroups(this.dataService.id)
       }
     })

@@ -94,7 +94,7 @@ app.post('/api/groups/new', (req, res) => {
                 console.log('Error writing file:  ' + err)
             } else {
                 console.log('File written successfully by UserID: ' + post.userID)
-                res.send({err: false, reload: true})
+                res.send({success: true, error: ''})
             }
         })
     }
@@ -121,7 +121,7 @@ app.post('/api/groups/delete', (req, res) => {
         console.log(groups.splice(index, 1))
         console.log(groups)
         saveJSON(res)
-    } else res.send({err: true, reload: false})
+    } else res.send({success: false, error: 'Failed to delete'})
 })
 
 //Recieves {userID, group}, returns {err: bool, reload: bool}
@@ -139,7 +139,7 @@ app.post('/api/groups/edit', (req, res) => {
         groups[index] = post.group
         console.log(groups[index])
         saveJSON(res)
-    } else res.send({error: true, reload: false})
+    } else res.send({success: false, error: 'Failed to edit'})
 })
 
 app.post('/api/channels', (req, res) => {
@@ -196,7 +196,7 @@ app.post('/api/channels/add', (req, res) => {
             .channels.push(counter.channel)
         saveJSON(res)
         console.log(channels)
-    } else res.send({error: true, reload: false})
+    } else res.send({success: false, error: 'Failed to add'})
 })
 
 //Recieves {userID, name, channel}, returns {err: bool, reload: bool}
@@ -213,7 +213,7 @@ app.post('/api/channels/edit', (req, res) => {
         })] = post.channel
         saveJSON(res)
         console.log(channels)
-    } else res.send({error: true, reload: false})
+    } else res.send({success: false, error: 'Failed to edit'})
 })
 
 
@@ -230,12 +230,12 @@ app.post('/api/channels/delete', (req, res) => {
             return channel.id == post.channelID
         }), 1)
         let buffer = groups[groups.findIndex(group=> {return group.id == post.groupID})]
-            .participants
+            .channels
         console.log(buffer)
         buffer.splice(buffer.indexOf(post.channelID), 1)
         saveJSON(res)
         console.log(channels)
-    } else res.send({error: true, reload: false})
+    } else res.send({success: false, error: 'Failed to edit'})
 })
 
 //Recieves {userID, channelID, message}, returns {err: bool, reload: bool}
@@ -279,10 +279,10 @@ function saveJSON(respond){
     fs.writeFile('./data.json', data, 'utf-8', (err) =>{
         if(err) {
             console.log('Error writing file:  ' + err)
-            return respond.send({err: true, reload: false})
+            return respond.send({success: false, error: 'Failed to save edit to data'})
         } else {
             console.log('File written successfully')
-            return respond.send({err: false, reload: true})
+            return respond.send({success: true, error: ''})
         }
     })
 } 

@@ -11,9 +11,6 @@ export class GroupComponent implements OnInit {
   group = -1
   channels = []
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private dataService: DataService) {
-    //this.group = parseInt(this.router.getCurrentNavigation()?.extras.state['id'])
-
-    console.log()
    }
 
   ngOnInit(): void {
@@ -26,15 +23,6 @@ export class GroupComponent implements OnInit {
     } else {
       this.router.navigateByUrl('/home')
     }
-
-    // this.activatedRoute.data.subscribe(data => {
-    //   console.log(data)
-    //   console.log(data['state'])
-    //   this.dataService.fetchChannels(this.dataService.id, data['state'].id).subscribe(res => {
-    //     this.channels = res
-    //     console.log(this.channels)
-    //   })
-    // })
   }
 
 }
