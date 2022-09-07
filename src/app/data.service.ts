@@ -6,13 +6,9 @@ import { BehaviorSubject, pipe } from 'rxjs';
 interface User {
   id: number,
   username: string,
-  birthdate: string,
-  age: number,
   email: string,
-  password: string,
   valid: boolean,
-  admin: boolean,
-  super: boolean
+  role: number
 }
 
 @Injectable({
@@ -23,16 +19,13 @@ export class DataService {
   dataUser:  User = {
     id: -1,
     username: '',
-    birthdate: '',
-    age: -1,
     email: '',
-    password: '',
     valid: false,
-    admin: false,
-    super: false
+    role: 0
   }
-  groups: any[] = []
+  groups = new BehaviorSubject([])
   valid: boolean = false
+  id: number = 0
 
 
   constructor(private http: HttpClient, private router: Router) { 
@@ -47,6 +40,10 @@ export class DataService {
     if(initData != null && initData.valid){
       this.dataUser = initData
       this.valid = true
+      this.id = initData.id
+      this.fetchGroups(this.dataUser.id).subscribe((res)=>{
+        this.groups.next(res)
+      })
     } else {
       this.router.navigate(['login'])
     }
@@ -60,7 +57,7 @@ export class DataService {
   
   validateLogin(username: String, password: String){
     //Check if login is valid and allow user in if true
-    return this.http.post<User>(this.serverLocation + '/api/login', {username: username, password: password, valid: false})
+    return this.http.post<User>(this.serverLocation + '/api/login', {email: username, password: password, valid: false})
   }
 
   getUser(){
@@ -78,9 +75,17 @@ export class DataService {
     this.dataUser = userData
   }
   
+
   fetchGroups(userID: number){
     return this.http.post<any>(this.serverLocation + '/api/groups', {userID: userID})
     //Get groups that are relevant to user
+  }
+
+  reloadGroups(userID: number){
+    this.http.post<any>(this.serverLocation + '/api/groups', {userID: userID}).subscribe(res => {
+      console.log(res)
+      this.groups.next(res)
+    })
   }
 
   fetchChannels(groupID: number, userID: number){
@@ -88,6 +93,17 @@ export class DataService {
     return this.http.post<any>(this.serverLocation + '/api/channels', {groupID: groupID, userID: userID})
   }
 
+  newGroup(userID: number, groupName: string){
+    return this.http.post<any>(this.serverLocation + '/api/groups/new', {userID: userID, groupName: groupName})
+  }
+
+  editGroup(userID: number, group: {}){
+    return this.http.post<any>(this.serverLocation + '/api/groups/edit', {userID: userID, group: group})
+  }
+
+  deleteGroup(userID: number, groupID: number){
+    return this.http.post<any>(this.serverLocation + '/api/groups/delete', {userID: userID, groupID: groupID})
+  }
   fetchChannelContent(){
     //Get data within selected channel
   }  

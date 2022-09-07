@@ -1,69 +1,146 @@
 {
     "global": {
         "userIDcount": 2,
-        "groupIDcount": 0,
-        "channeIDcount": 1,
-        "admincache": [0,1]
+        "groupIDcount": 13,
+        "channelIDcount": 15,
+        "admincache": [
+            0,
+            1
+        ]
     },
     "users": [
         {
             "id": 0,
             "username": "super",
-            "birthdate": "24/08/2001",
-            "age": 21,
             "email": "rjscho@live.com.au",
             "password": "superuser2001",
             "valid": true,
-            "admin": true,
-            "super": true
+            "role": -1
         },
         {
             "id": 1,
             "username": "bob",
-            "birthdate": "05/05/1995",
-            "age": 27,
             "email": "bob@example.com.au",
             "password": "bobisgreat",
             "valid": true,
-            "admin": true,
-            "super": false
+            "role": 1
         },
         {
             "id": 2,
             "username": "alice",
-            "birthdate": "06/06/1990",
-            "age": 32,
             "email": "alice@example.com.au",
             "password": "alice1990",
             "valid": true,
-            "admin": false,
-            "super": false
+            "role": 2
         }
     ],
     "groups": [
         {
             "id": 0,
             "name": "IT Study",
-            "channels": [0,1],
-            "participants": [2]
+            "channels": [
+                0,
+                1
+            ],
+            "participants": [
+                0,
+                1,
+                2
+            ],
+            "assis": [
+                2
+            ]
         },
         {
             "id": 1,
             "name": "Science Study",
             "channels": [],
-            "participants": []
+            "participants": [
+                0,
+                1
+            ],
+            "assis": []
+        },
+        {
+            "id": 10,
+            "name": "Not actually that cool though",
+            "channels": [
+                12
+            ],
+            "participants": [
+                0,
+                1
+            ],
+            "assis": []
+        },
+        {
+            "id": 11,
+            "name": "hello world",
+            "channels": [
+                13
+            ],
+            "participants": [
+                0,
+                1
+            ],
+            "assis": []
         }
     ],
     "channels": [
-        {   
+        {
             "id": 0,
             "name": "Programming",
-            "participants": [2]
+            "participants": [
+                0,
+                1,
+                2
+            ]
         },
-        {   
+        {
             "id": 1,
             "name": "Networking",
-            "participants": []
+            "participants": [
+                0,
+                1
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Physics",
+            "participants": [
+                0,
+                1
+            ]
+        },
+        {
+            "id": 4,
+            "name": "General",
+            "participants": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "id": 12,
+            "name": "General",
+            "participants": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "id": 13,
+            "name": "General",
+            "participants": [
+                [
+                    0,
+                    1
+                ]
+            ]
         }
     ]
 }

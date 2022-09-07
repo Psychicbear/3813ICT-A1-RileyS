@@ -27,8 +27,7 @@ export class LoginComponent implements OnInit {
       if(data.valid){
         this.dataService.saveUser(data)
         this.dataService.valid = true
-        let userID = this.dataService.dataUser.id
-        console.log(userID)
+        this.dataService.id = data.id
         this.router.navigate(['home'])
         //Log user in
       } else {

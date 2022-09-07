@@ -1,5 +1,19 @@
 <div>
-    <div *ngFor="let group of groups;">
-        <p>{{group.name}}</p>
+    <form>
+        <label>Add Group:</label>
+        <input #add type="text">
+        <button (click)="addGroup(add.value)">Add Group</button>
+    </form>
+    <form>
+        <select #selectedGroup>
+            <option *ngFor="let group of groups; index as i" value="{{i}}" name="group" ngDefaultControl>{{groups[i].name}}</option>
+        </select>
+        <label>New name:</label>
+        <input #edit type="text">
+        <button (click)="removeGroup(selectedGroup.value)">Remove Group</button>
+        <button (click)="updateGroup(selectedGroup.value, edit.value)">Update Group</button>
+    </form>
+    <div *ngFor="let group of groups; index as i">
+        <p>{{groups[i].name}}</p>
     </div>
 </div>
