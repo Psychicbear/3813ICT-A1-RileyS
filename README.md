@@ -71,6 +71,16 @@ All API calls are to be sent to the route at `./api/` to specify their purpose a
 |**Parameters**| `{ userID: number }` |
 |**Return Value**|`groups[]`|
 |**Technical Explanation**|The route first checks the userID to see if they are an admin. All admins have access to all groups so if this succeeds, every group is sent back. If the user isn't an admin, the server checks the participant array of each group and returns every group that includes the userID in the participant array|
+
+### Fetch Group Participants
+|||
+|:--|:--|
+|**Description**|Grabs a list of all users that are members of the select group|
+|**Route**|`/api/groups/participants`|
+|**Method**|`POST`|
+|**Parameters**| `{ groupID: number }` |
+|**Return Value**|`groups[]`|
+|**Technical Explanation**|The route finds the group using the ID, and uses map to loop through the participants array and return the names linked to the userIDs|
 ### Add Group
 |||
 |:--|:--|

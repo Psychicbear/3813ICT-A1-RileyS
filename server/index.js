@@ -8,6 +8,7 @@ let host = '127.0.0.1';
 let port = 3000;
 var cors = require('cors');
 const { group } = require('console');
+const { isErrored } = require('stream');
 let groups = jsonData.groups
 let channels = jsonData.channels
 let users = jsonData.users
@@ -50,6 +51,98 @@ app.post('/api/login', (req, res) => {
 
 });
 
+//Recieves {username, email, password}, returns {err: bool, reload: bool}
+app.post('/api/login/newUser', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    console.log(post.groupID)
+    counter.user++
+    users.push({
+        id: counter.user,
+        username: post.username,
+        email: post.email,
+        password: post.password,
+        valid: true,
+        role: 3,
+        groups: [],
+        channels: []
+    })
+    saveJSON(res)
+    console.log(users)
+})
+
+//Recieves {userID, targetID, role}, returns {err: bool, reload: bool}
+app.post('/api/login/modifyRole', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    let userRole = checkRole(post.userID)
+    let permitted = false
+    if(userRole <= 1){
+        if(userRole==-1){
+            permitted = true
+        } else if(userRole==1 && checkRole(post.targetID) > 1 && post.role > 1){
+            permitted = true
+        }
+        if(permitted){
+            getUser(post.targetID).role = post.role
+            saveJSON(res)
+        } else {
+            res.send({success: false, error: 'Insufficient permissions'})
+        }
+    }
+})
+
+//Recieves {userID, targetID}, returns {err: bool, reload: bool}
+app.post('/api/login/deleteUser', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    console.log(post.userID)
+    console.log(post.targetID)
+    let userRole = checkRole(post.userID).role
+    let targetRole = checkRole(post.targetID).role
+
+    if(post.userID == post.targetID || 
+        (checkRole(post.userID)==-1 &&
+         checkRole(post.targetID)!=-1)){
+        let user = users.find(user => {return user.id==post.targetID})
+        user.groups.map(groupID => {//Gets index of each group 
+            return groups.findIndex(group => {
+                return group.id == groupID
+            })
+        }).map(group => {//Deletes user from group
+            groups[group].participants.splice(
+                groups[group].participants.indexOf(post.targetID), 1)
+            if(groups[group].assis.includes(post.targetID)){
+                groups[group].assis.splice(groups[group].assis.indexOf(post.targetID), 1)
+            }
+            console.log({id: post.targetID})
+            console.log({participants: groups[group].participants})
+        })
+        user.channels.map(channelID => {//Gets index of each channel
+            return channels.findIndex(channel => {
+                return channel.id == channelID
+            })
+        }).map(channel => {//Deletes user from channel
+            channels[channel].participants.splice(
+                channels[channel].participants.indexOf(post.targetID), 1)
+            console.log({id: post.targetID})
+            console.log({participants: channels[channel].participants})
+        })
+        users.splice(users.findIndex(user => {
+            return user.id == post.targetID
+        }))
+        saveJSON(res)
+    } else {
+        res.send({success: false, error: 'Failed to delete user'})
+    }
+})
+
 app.post('/api/groups', (req, res) => {
     if(!req.body){
         return res.sendStatus(400);
@@ -65,6 +158,74 @@ app.post('/api/groups', (req, res) => {
             }
         })
     res.send(data)
+})
+
+//Recieves {groupID: number}, returns users[]
+app.post('/api/groups/participants', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    let group = groups.find(group => {
+        return group.id == post.groupID
+    })
+    if(group){
+        res.send(group.participants.map(userID => {
+            let username = users.find(user => {
+                return user.id == userID
+            })
+            if(username){
+                return username.username
+            } else {
+                return null
+            }
+        }))
+    }
+})
+
+//Recieves {userID, targetID, groupID}, returns {err: bool, reload: bool}
+app.post('/api/groups/addUser', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    console.log(post.groupID)
+    let role = checkRole(post.userID)
+    if(role<=1 || (role==2 && checkAssis(post.userID, post.groupID))){
+        let group = getGroup(post.groupID)
+        let target = getUser(post.groupID)
+        if(target.role <= 1){
+            res.send({success: false, error: 'User already has access'})
+        } else if(!target.groups.includes(post.groupID)){
+            target.groups.push(post.groupID)
+            group.participants.push(post.targetID)
+            res.send({success: true, error: ''})
+        } else {res.send({success: false, error: 'Unknown error'})}
+    }
+})
+
+//Recieves {userID, targetID, groupID}, returns {err: bool, reload: bool}
+app.post('/api/groups/removeUser', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    console.log(post.groupID)
+    let user = getUser(post.userID)
+    let target = getUser(post.targetID)
+    if(user.role <= 1 && target.id >= 2){
+        let group = getGroup(post.groupID)
+        group.participants.slice(group.participants.findIndex(target.id))
+        target.groups.slice(target.groups.findIndex(group.id))
+        group.channels.map(channelID => {
+            return getChannel(channelID)
+        }).forEach(channel => {
+            if(channel.participants.includes(post.targetID)){
+                channel.participants.splice(channel.participants.indexOf(post.targetID), 1)
+                target.channels.splice(target.channels.findIndex(channel.id), 1)
+            }
+        })
+    }
 })
 
 app.post('/api/groups/new', (req, res) => {
@@ -174,6 +335,36 @@ app.post('/api/channels', (req, res) => {
         })
     }
     res.send(data)
+})
+
+//Recieves {userID, targetID, groupID, channelID}, returns {err: bool, reload: bool}
+app.post('/api/channels/addUser', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    let user = getUser(post.userID)
+    let target = getUser(post.targetID)
+    let group = getGroup(post.groupID)
+    let channel = getChannel(post.channelID)
+    if(user.role<=1 || (user.role==2 && checkAssis(post.userID, post.groupID))){
+        if(target.role >= 2 && 
+            !target.channels.includes &&
+            group.participants.includes(target.id)){
+                channel.participants.push(target.id)
+                target.channels.push(channel.id)
+            }
+    }
+})
+
+//Recieves {userID, name, groupID}, returns {err: bool, reload: bool}
+app.post('/api/channels/removeUser', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    console.log(post.groupID)
+    let role = checkRole(post.userID)
 })
 
 //Recieves {userID, name, groupID}, returns {err: bool, reload: bool}
@@ -294,7 +485,7 @@ function checkAssis(userID, groupID){
 }
 
 function checkRole(userID){
-    return users.find((user)=>{
+    return users.find((user) => {
         return user.id == userID
     }).role
 }
@@ -303,5 +494,23 @@ function checkParticipant(userID, channelID){
     return channels.find(channel => {
         return channel.id == channelID
     }).participants.includes(userID)
+}
+
+function getUser(userID){
+    return users.find(user => {
+        return user.id == userID
+    })
+}
+
+function getGroup(groupID){
+    return groups.find(group => {
+        return group.id == groupID
+    })
+}
+
+function getChannel(channelID){
+    return channels.find(channel => {
+        return channel.id == channelID
+    })
 }
 //Check permission function which gets the user ID and the permission level required, and checks if user meets this permission level

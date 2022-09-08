@@ -15,7 +15,9 @@
             "email": "rjscho@live.com.au",
             "password": "superuser2001",
             "valid": true,
-            "role": -1
+            "role": -1,
+            "groups": [],
+            "channels": []
         },
         {
             "id": 1,
@@ -23,7 +25,9 @@
             "email": "bob@example.com.au",
             "password": "bobisgreat",
             "valid": true,
-            "role": 1
+            "role": 1,
+            "groups": [0,1],
+            "channels": [0,1,2]
         },
         {
             "id": 2,
@@ -31,7 +35,19 @@
             "email": "alice@example.com.au",
             "password": "alice1990",
             "valid": true,
-            "role": 2
+            "role": 2,
+            "groups": [0,1],
+            "channels": [0,1,2]
+        },
+        {
+            "id": 3,
+            "username": "Jeff",
+            "email": "alice@example.com.au",
+            "password": "alice1990",
+            "valid": true,
+            "role": 2,
+            "groups": [0,1],
+            "channels": [0,1,2]
         }
     ],
     "groups": [
@@ -42,8 +58,12 @@
                 0,
                 1
             ],
-            "participants": [2],
-            "assis": [2]
+            "participants": [
+                2
+            ],
+            "assis": [
+                2
+            ]
         },
         {
             "id": 1,
@@ -69,22 +89,12 @@
         {
             "id": 1,
             "name": "Networking",
-            "participants": [
-                [
-                    0,
-                    1
-                ]
-            ]
+            "participants": []
         },
         {
             "id": 2,
             "name": "General",
-            "participants": [
-                [
-                    0,
-                    1
-                ]
-            ]
+            "participants": []
         }
     ]
 }

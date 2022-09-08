@@ -72,10 +72,21 @@ export class DataService {
     this.dataUser = userData
   }
   
+  deleteUser(userID: number, targetID: number){
+    this.http.post<any>(this.serverLocation + '/api/login/deleteUser', {userID: userID, targetID: targetID}).subscribe(res => {
+      if(!res.success){
+        console.log(res.error)
+      } else {console.log('Somehow this worked?')}
+    })
+  }
 
   fetchGroups(userID: number){
     return this.http.post<any>(this.serverLocation + '/api/groups', {userID: userID})
     //Get groups that are relevant to user
+  }
+
+  fetchGroupParticipants(groupID: number){
+    return this.http.post<any>(this.serverLocation + '/api/groups/participants', {groupID: groupID})
   }
 
   reloadGroups(userID: number){
