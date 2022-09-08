@@ -7,9 +7,6 @@ var app = express();
 let host = '127.0.0.1';
 let port = 3000;
 var cors = require('cors');
-const { group } = require('console');
-const { isErrored } = require('stream');
-const { createImportSpecifier } = require('typescript');
 let groups = jsonData.groups
 let channels = jsonData.channels
 let users = jsonData.users
@@ -354,6 +351,7 @@ app.post('/api/channels/addUser', (req, res) => {
             group.participants.includes(target.id)){
                 channel.participants.push(target.id)
                 target.channels.push(channel.id)
+                saveJSON(res)
             }
     }
 })

@@ -2,7 +2,7 @@
 Phase 1 of the 3813ICT major project
 # Git
 ### Git Layout
-The git repository contains the Angular project in the root folder, and the node server within the ./server directory. The default branch is `main` as the default branch convention of Github
+The git repository contains the Angular project in the root folder, and the node server within the ./server directory. The default branch is `main` as the default branch convention of Github. The repository is pushed to my public Github repository located at https://github.com/Psychicbear/3813ICT-A1-RileyS
 
 ### Version Control Approach
 During the development of this application, commits were made typically after a major feature had been written and tested. It was ensured that the app worked entirely as expected before changes were committed.
@@ -59,7 +59,7 @@ All API calls are to be sent to the route at `./api/` to specify their purpose a
 |**Method**|`POST`|
 |**Parameters**|`{ userID: number, targetID: number }`|
 |**Return Value**|`{ success: boolean, error: string}`|
-|**Technical Explanation**|This route first checks the userID to see if it has permission to delete users, then it checks to make sure the userID actually has the permission to delete the targetID. If the user has permission, the target user is spliced from the users array|
+|**Technical Explanation**|This route first checks the userID to see if it has permission to delete users, then it checks to make sure the userID actually has the permission to delete the targetID. If the user has permission, the target user is spliced from the users array, and their associated groups and channels are scanned to remove refenences to the userID|
 
 ## Groups
 ### Fetch Groups
@@ -81,6 +81,26 @@ All API calls are to be sent to the route at `./api/` to specify their purpose a
 |**Parameters**| `{ groupID: number }` |
 |**Return Value**|`groups[]`|
 |**Technical Explanation**|The route finds the group using the ID, and uses map to loop through the participants array and return the names linked to the userIDs|
+
+### Add User to Group
+|||
+|:--|:--|
+|**Description**|Adds the indicated user to the indicated group|
+|**Route**|`/api/groups/addUser`|
+|**Method**|`POST`|
+|**Parameters**| `{ userID: number, targetID: number, groupID: number }` |
+|**Return Value**|`{ success: boolean, error: string }`|
+|**Technical Explanation**|userID is checked for permission to execute before the targetID is checked to see if it is already associated to the group. If the target user isn't already associated, the groupID is pushed to their groups, and their id is pushed to the group participants|
+
+### Remove User from Group
+|||
+|:--|:--|
+|**Description**|Removes the indicated user from the indicated group|
+|**Route**|`/api/groups/removeUser`|
+|**Method**|`POST`|
+|**Parameters**| `{ userID: number, targetID: number, groupID: number }` |
+|**Return Value**|`{ success: boolean, error: string }`|
+|**Technical Explanation**|userID is checked for permission to execute before references connecting the target to the group is severed, followed by the removal of refences connecting the user to channels associated with the group|
 ### Add Group
 |||
 |:--|:--|
@@ -122,6 +142,35 @@ All API calls are to be sent to the route at `./api/` to specify their purpose a
 |**Return Value**|`{ channels[]: channel Object }`|
 |**Technical Explanation**|The route first loads all the channels associated with the groupID. It then checks which of these channels the userID participates in. Super, Group Admins, and Group Assis of the group are automatically given all channels.|
 
+### Fetch Channel Participants
+|||
+|:--|:--|
+|**Description**|Retrieves a list of users associated with the indicated channel|
+|**Route**|`/api/channels/participants`|
+|**Method**|`POST`|
+|**Parameters**|`{ channelID: number }`|
+|**Return Value**|`{ Users[]: user Object }`|
+|**Technical Explanation**|The route finds the channel using the ID, and uses map to loop through the participants array and return the names linked to the userIDs|
+
+### Add User to Channel
+|||
+|:--|:--|
+|**Description**|Creates a link between the user and the channel, allowing them to access the channel|
+|**Route**|`/api/channels/addUser`|
+|**Method**|`POST`|
+|**Parameters**|`{ userID: number, targetID: number, groupID: number, channelID: number }`|
+|**Return Value**|`{ success: boolean, error: string }`|
+|**Technical Explanation**|userID is checked for permission to execute before checking if the targetID is already associated with the group but not associated with the channel. If this is true, a link is created by adding targetID to the channel participants, and channelID to the user's channels|
+
+### Remove User from Channel
+|||
+|:--|:--|
+|**Description**|Removes the link between the user and the channel, disallowing them from accessing the channel|
+|**Route**|`/api/channels/removeUser`|
+|**Method**|`POST`|
+|**Parameters**|`{ userID: number, targetID: number, groupID: number, channelID: number }`|
+|**Return Value**|`{ success: boolean, error: string }`|
+|**Technical Explanation**|userID is checked for permission to execute before references connecting the target to the channel is severed|
 ### Add Channel
 |||
 |:--|:--|
@@ -161,7 +210,7 @@ All API calls are to be sent to the route at `./api/` to specify their purpose a
 |**Method**|`POST`|
 |**Parameters**|`{ userID: number, channelID: number}`|
 |**Return Value**|`{ messages[]: message Object}`|
-|**Technical Explanation**|The route checks if the userID is a participant of the channel, and if this passes the server will load the chat log for the channel from a json and send the messages to the client|
+|**Technical Explanation**|The route checks if the userID is a participant of the channel, and if this passes the server will attempt to load the chat log for the channel from a json file. If the file does not exist, the server will automatically make a template and write it to a file. and send the messages to the client|
 
 ### Send Message
 |||
@@ -198,28 +247,15 @@ This component (located at `./channel`) is where all conversations take place. U
 ### Account
 This component (located at `./account`) enables the user to make changes to their own account, allowing them to change their username, email or password. This section also allows the user to set a profile picture to help users better identify them in conversations.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
+# How to use
 
-## Development server
+## Build the Angular App
+To use the current build for the app, you'll need `npm` installed with `Angular`. To build the app, simply navigate to the root folder and use `ng build` with your CLI. If all goes well, Angular will build the app in the `./dist` folder
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
+## Run the App
+Once the Angular app is built, all you need to do is navigate to the `./server` folder and run the command `node index.js`. If the server launches properly, you should be able to access the app in your own browser at [localhost:3000](http://localhost:3000)
 ## Further help
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
