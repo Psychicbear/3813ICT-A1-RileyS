@@ -30,6 +30,7 @@ export class DataService {
 
   constructor(private http: HttpClient, private router: Router) { 
     this.init()
+    this.fetchChannelContent(0, 0)
   }
 
   init(){
@@ -125,7 +126,10 @@ export class DataService {
     return this.http.post<any>(this.serverLocation + '/api/channels/delete', {userID: userID, groupID: groupID, channelID: channelID})
   }
 
-  fetchChannelContent(){
+  fetchChannelContent(userID: number, channelID: number){
+    this.http.post<any>(this.serverLocation + '/api/channels/readMessages', {userID: userID, channelID: channelID}).subscribe(res => {
+      console.log(res)
+    })
     //Get data within selected channel
   }  
 }

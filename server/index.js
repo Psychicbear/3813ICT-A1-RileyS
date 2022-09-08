@@ -9,6 +9,7 @@ let port = 3000;
 var cors = require('cors');
 const { group } = require('console');
 const { isErrored } = require('stream');
+const { createImportSpecifier } = require('typescript');
 let groups = jsonData.groups
 let channels = jsonData.channels
 let users = jsonData.users
@@ -429,24 +430,48 @@ app.post('/api/channels/delete', (req, res) => {
     } else res.send({success: false, error: 'Failed to edit'})
 })
 
-//Recieves {userID, channelID, message}, returns {err: bool, reload: bool}
-// app.post('/api/channels/readMessages', (req, res) => {
-//     if(!req.body){
-//         return res.sendStatus(400);
-//     }
-//     let post = req.body
-//     console.log(post.message.content)
-//     let role = checkRole(post.userID)
-//     if(role<=1 
-//         || role==2 && checkAssis(post.userID, post.groupID)
-//         || checkParticipant(post.userID, post.channelID)){
-//         channels.splice(channels.findIndex(channel => {
-//             return channel.id == post.channelID
-//         }), 1)
-//         saveJSON(res)
-//         console.log(channels)
-//     } else res.send({error: true, reload: false})
-// })
+//Recieves {userID, channelID}, returns {err: bool, reload: bool}
+app.post('/api/channels/readMessages', (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    let post = req.body
+    let channel = getChannel(post.channelID)
+    let user = getUser(post.userID)
+    if(user.role <= 1 || channel.participants.includes(user.id)){
+        fs.readFile(`./logs/channel_${post.channelID}.json`, 'utf8', (err, data) => {
+            let messages = []
+            if(err) {
+                if(err.code==='ENOENT'){
+                    let template = {
+                        messages: [
+                            {
+                                timestamp: new Date(),
+                                userID: -1,
+                                message: 'Hello World'
+                            }
+                        ]
+                    }
+                    fs.writeFile(`./logs/channel_${post.channelID}.json`,
+                        JSON.stringify(template, null, 4), 'utf8', (err, data) => {
+                            if(err) {
+                                console.log('Error writing file:  ' + err)
+                            } else {
+                                console.log('File written successfully')
+                                messages = JSON.parse(data)
+                                res.send(messages)
+                            }
+                        })
+                }
+                console.log(`Error reading file from disk: ${err}`)
+            } else {
+                console.log(data)
+                messages = JSON.parse(data)
+                res.send(messages)
+            }
+        } )
+    }
+})
 
 // //Recieves {userID, name, channelID}, returns {err: bool, reload: bool}
 // app.post('/api/channels/writeMessage', (req, res) => {
@@ -454,15 +479,6 @@ app.post('/api/channels/delete', (req, res) => {
 //         return res.sendStatus(400);
 //     }
 //     let post = req.body
-//     console.log(post.channelID)
-//     let role = checkRole(post.userID)
-//     if(role<=1 || (role==2 && checkAssis(post.userID, post.groupID))){
-//         channels.splice(channels.findIndex(channel => {
-//             return channel.id == post.channelID
-//         }), 1)
-//         saveJSON(res)
-//         console.log(channels)
-//     } else res.send({error: true, reload: false})
 // })
 
 function saveJSON(respond){
