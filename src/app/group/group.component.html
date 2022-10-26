@@ -1,1 +1,73 @@
-<p>group works!</p>
+<div class="row g-3 p-3">
+    <h4 class="col-md-10 text-center">Channels</h4>
+    <button class="btn btn-primary col-md-2" (click)="triggerModal(modalAdd)">New Channel</button>
+    <div class="col-md-3" *ngFor="let channel of channels; index as i">
+        <div class="card">
+            <div class="card-header">
+                <h5>{{channels[i].name}}</h5>            
+            </div>
+            <div class="card-body">
+              <button class="btn btn-primary" (click)="openChat(channels[i].id)">View Chat</button>
+              <button class="btn btn-primary" (click)="editChannel=channels[i];triggerModal(modalEdit);">Edit</button>
+              <button class="btn btn-danger" (click)="delChannel=channels[i];triggerModal(modalDel);">Delete</button>
+            </div>
+          </div>
+    </div>
+</div>
+
+<ng-template #modalAdd let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Channel</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross Click')">
+        </button>
+    </div>
+    <form>
+        <div class="modal-body row g-3 p-3">
+            <div class="col-md-12">
+                <label for="addChannelName" class="form-label">Channel Name</label>
+                <input class="form-control" #addChannelName name="addChannelName" type="text">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="modal.close({'method': 'add', 'channelName': addChannelName.value})">Add</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modalEdit let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Edit Channel</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross Click')">
+        </button>
+    </div>
+    <form>
+        <div class="modal-body row">
+            <div class="col-md-12">
+                <label for="editChannelName" class="form-label">Channel Name</label>
+                <input ([NgModel])="editChannel.name" class="form-control" #editChannelName name="editChannelName" type="text" value="{{editChannel.name}}">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="modal.close({'method': 'edit', 'channelName': editChannelName.value, 'channelID': editChannel.id})">Update</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modalDel let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Delete Channel: {{delChannel.name}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross Click')">
+        </button>
+    </div>
+    <form>
+        <div class="modal-body row">
+            <p>Are you sure you want to delete Channel: <strong>{{delChannel.name}}</strong>?</p>
+            <div class="alert alert-danger" role="alert">
+                <strong>Careful! This cannot be undone!</strong>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-danger" (click)="modal.close({'method': 'del', 'channelID': delChannel.id})">Close</button>
+        </div>
+    </form>
+</ng-template>

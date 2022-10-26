@@ -1,0 +1,76 @@
+{
+    "global": {
+        "userIDcount": 2,
+        "groupIDcount": 1,
+        "channelIDcount": 2,
+        "admincache": [
+            0,
+            1
+        ]
+    },
+    "users": [
+        {
+            "username": "super",
+            "email": "rjscho@live.com.au",
+            "password": "superuser2001",
+            "role": -1,
+            "groups": [
+                
+            ]
+        },
+        {
+            "username": "bob",
+            "email": "bob@example.com.au",
+            "password": "bobisgreat",
+            "role": 1,
+            "groups": [
+                
+            ]
+        },
+        {
+            "username": "alice",
+            "email": "alice@example.com.au",
+            "password": "alice1990",
+            "role": 2,
+            "groups": [
+            ]
+        },
+        {
+
+            "username": "Jeff",
+            "email": "alice@example.com.au",
+            "password": "alice1990",
+            "role": 2,
+            "groups": [
+                []
+            ]
+        }
+    ],
+    "groups": [
+        {
+            "name": "IT Study",
+            "participants": [],
+            "channels": []
+        },
+        {
+            "name": "Gaming",
+            "participants": [],
+            "channels": []
+        },
+        {
+            "name": "test",
+            "participants": [],
+            "channels": []
+        },
+        {
+            "name": "fghd",
+            "participants": [],
+            "channels": []
+        },
+        {
+            "name": "group",
+            "participants": [],
+            "channels": []
+        }
+    ]
+}

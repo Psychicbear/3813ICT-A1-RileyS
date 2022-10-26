@@ -22,9 +22,9 @@ export class LoginComponent implements OnInit {
   }
 
   submit(){
-    this.dataService.validateLogin(this.usrname, this.usrpwd).subscribe(data => {
+    this.dataService.validateLogin(this.usrname, this.usrpwd).subscribe( data => {
       console.log(data)
-      if(data.valid){
+      if(data.id){
         this.dataService.saveUser(data)
         this.dataService.valid = true
         this.dataService.id = data.id

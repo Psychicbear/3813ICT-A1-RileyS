@@ -1,14 +1,21 @@
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <ul class="navbar navbar-nav">
-      <li class="active"><a class="nav-link" routerLink="/home">Home</a></li>
-      <li *ngIf="accountStatus(); else login"><a class="nav-link" routerLink="/account">Account</a></li>
-      <ng-template #login><a class="nav-link" routerLink="/login">Login</a></ng-template>
-      <li><a class="nav-link" button (click)="clearStorage()">Clear Data</a></li>
-    </ul>
+
+<div class="row g-3 p-3">
+  <div class="col-md-2">
+    
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <ul class="navbar navbar-nav nav-pill">
+          <li class="active"><a class="nav-link" routerLink="/home">Home</a></li>
+          <li *ngIf="accountStatus(); else login"><a class="nav-link" routerLink="/account">Account</a></li>
+          <ng-template #login><a class="nav-link" routerLink="/login">Login</a></ng-template>
+          <li><a class="nav-link" button (click)="clearStorage()">Clear Data</a></li>
+        </ul>
+      </div>
+    </nav>
   </div>
-</nav>
-<div class="container">
-  <router-outlet></router-outlet>
+  <div class="col-md-10">
+    <router-outlet></router-outlet>
+  </div>
+  
   <!-- <app-login></app-login> -->
 </div>

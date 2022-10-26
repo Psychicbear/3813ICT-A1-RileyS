@@ -1,21 +1,80 @@
 <div>
-    <form>
-        <label>Add Group:</label>
-        <input #add type="text">
-        <button (click)="addGroup(add.value)">Add Group</button>
-    </form>
-    <form>
-        <select #selectedGroup>
-            <option *ngFor="let group of groups; index as i" value="{{i}}" name="group" ngDefaultControl>{{groups[i].name}}</option>
-        </select>
-        <label>New name:</label>
-        <input #edit type="text">
-        <button (click)="removeGroup(selectedGroup.value)">Remove Group</button>
-        <button (click)="updateGroup(selectedGroup.value, edit.value)">Update Group</button>
-    </form>
-    <div *ngFor="let group of groups; index as i">
-        <div (click)="openGroup(groups[i].id)">
-            <p>{{groups[i].name}}</p>
+    <div class="row g-3 p-3">
+        <h4 class="col-md-10 text-center">Groups</h4>
+        <button class="btn btn-primary col-md-2" (click)="triggerModal(modalAdd)">New Group</button>
+        <div class="col-md-3" *ngFor="let group of groups; index as i">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h5>{{groups[i].name}}</h5>
+                </div>
+                <div class="card-body justify-content-center">
+                  <button class="btn btn-primary" (click)="openGroup(groups[i].id)">View Group</button>
+                  <button class="btn btn-primary" (click)="editGroup=groups[i];triggerModal(modalEdit);">Edit</button>
+                  <button class="btn btn-danger" (click)="delGroup=groups[i];triggerModal(modalDel);">Delete</button>
+                </div>
+              </div>
         </div>
     </div>
+
+    <ng-template #modalAdd let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Add Group</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross Click')">
+            </button>
+        </div>
+        <form>
+            <div class="modal-body row g-3 p-3">
+                <div class="col-md-12">
+                    <label for="addGroupName" class="form-label">Group Name</label>
+                    <input class="form-control" #addGroupName name="addGroupName" type="text">
+                </div>
+                <div class="col-md-12">
+                    <label for="addChannelName" class="form-label">Default Channel Name</label>
+                    <input class="form-control" #addChannelName name="addChannelName" type="text">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="modal.close({'method': 'add', 'groupName': addGroupName.value, 'channelName': addChannelName.value})">Add</button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalEdit let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Edit Group</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross Click')">
+            </button>
+        </div>
+        <form>
+            <div class="modal-body row">
+                <div class="col-md-12">
+                    <label for="editname" class="form-label">Group Name</label>
+                    <input ([NgModel])="editGroup.name" class="form-control" #editname name="editname" type="text" value="{{editGroup.name}}">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="modal.close({'method': 'edit', 'name': editname.value, 'id': editGroup.id})">Update</button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalDel let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Delete Group: {{delGroup.name}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross Click')">
+            </button>
+        </div>
+        <form>
+            <div class="modal-body row">
+                <p>Are you sure you want to delete group: <strong>{{delGroup.name}}</strong>?</p>
+                <div class="alert alert-danger" role="alert">
+                    <strong>Careful! This cannot be undone!</strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger" (click)="modal.close({'method': 'del', 'id': delGroup.id})">Close</button>
+            </div>
+        </form>
+    </ng-template>
 </div>
+
